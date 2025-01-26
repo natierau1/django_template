@@ -4,12 +4,15 @@ FROM node:18-alpine
 # Create app directory
 WORKDIR /app
 
-# Copy package and install dependencies
-COPY package*.json ./
-RUN npm install
+# Install dependencies first (for better caching)
+COPY package.json package-lock.json ./
+RUN npm ci
 
 # Copy the rest of the frontend code
-COPY . /app/
+COPY . .
+
+# Build the application
+RUN npm run build
 
 # Default command: run the dev server
 CMD ["npm", "start"] 

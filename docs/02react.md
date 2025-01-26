@@ -51,6 +51,7 @@ To implement the provided Material UI `Dashboard.tsx` template as the base for t
 
 2. **Install Dependencies**: ✅
    - Material UI and dependencies installed through Docker:
+   - https://github.com/mui/material-ui/blob/v6.4.1/docs/data/material/getting-started/templates/dashboard/Dashboard.tsx
      ```bash
      # Run npm commands through Docker:
      docker-compose exec frontend npm install @mui/material @mui/icons-material @emotion/react @emotion/styled @fontsource/roboto
