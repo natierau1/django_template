@@ -1,11 +1,33 @@
 import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './auth/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
+import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
+import { CssBaseline } from '@mui/material';
 
 function App() {
   return (
-    <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-      <h1>Hello from React!</h1>
-      <p>Edit <code>frontend/src/App.js</code> and save to reload.</p>
-    </div>
+    <AuthProvider>
+      <CssBaseline />
+      <Router>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/"
+            element={<Navigate to="/dashboard" replace />}
+          />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 

@@ -1,0 +1,15 @@
+# Use Node image for building
+FROM node:18-alpine
+
+# Set work directory
+WORKDIR /app
+
+# Install dependencies
+COPY package*.json ./
+RUN npm install
+
+# Copy project files
+COPY . .
+
+# Start development server
+CMD ["npm", "start"] 
