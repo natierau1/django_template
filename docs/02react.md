@@ -1,281 +1,149 @@
-# **React Frontend Setup Plan with Material UI Dashboard**
+# **React Material UI Dashboard Implementation Roadmap**
 
-### Goals:
-1. Use the Material UI **Dashboard Template** as the base UI for the entire frontend.
-2. Dockerize the React application.
-3. Implement a `.gitignore` to ensure unnecessary files are excluded from version control.
-4. Prepare the system for scalable development with TypeScript and authentication.
+## **Objective**
+To implement the provided Material UI `Dashboard.tsx` template as the base for the entire admin site, ensuring seamless integration with Docker, JWT-based authentication, and a fully customized Material UI theme. This roadmap focuses on implementing the key components and themes required for the dashboard.
 
 ---
 
-## **1. Project File Structure**
+## **Project Roadmap**
 
-```
-frontend/
-├── Dockerfile
-├── .dockerignore
-├── .gitignore
-├── package.json
-├── tsconfig.json
-├── public/
-│   ├── index.html
-│   └── manifest.json
-└── src/
-    ├── App.tsx
-    ├── index.tsx
-    ├── components/
-    │   ├── Dashboard.tsx      # Material UI dashboard template
-    │   ├── Login.tsx          # Login screen
-    │   ├── ProtectedRoute.tsx # Authentication guard for routes
-    │   └── Sidebar.tsx        # Navigation sidebar (from Dashboard)
-    ├── services/
-    │   └── authService.ts     # Authentication API integration
-    ├── theme/
-    │   └── theme.ts           # Custom Material UI theme
-    └── utils/
-        └── helpers.ts         # Reusable helper functions
-```
+### **Phase 1: Backend and JWT Setup**
+- **Complete**: Ensure the Django backend is Dockerized with JWT authentication.
+- Provide `/api/token/` and `/api/token/refresh/` endpoints for React to handle authentication.
+- Configure CORS to allow requests from the frontend.
+
+**Deliverable**:
+- Fully functional backend with JWT authentication, ready to connect to the React frontend.
 
 ---
 
-## **2. Material UI Dashboard Integration**
+### **Phase 2: React and Material UI Setup**
 
-### Base Template
-The [Dashboard Template](https://github.com/mui/material-ui/blob/v6.4.1/docs/data/material/getting-started/templates/dashboard/Dashboard.tsx) will serve as the foundation of your application. Its components (like the sidebar, top navigation, and cards) will be reused across the system.
-
-### Required Setup:
-1. **Install Material UI**:
-   ```bash
-   npm install @mui/material @mui/icons-material @emotion/react @emotion/styled @fontsource/roboto
-   ```
-
-2. **Add Dashboard to `src/components/`**:
-   - Copy the [Dashboard.tsx](https://github.com/mui/material-ui/blob/v6.4.1/docs/data/material/getting-started/templates/dashboard/Dashboard.tsx) file into `src/components/`.
-
-3. **Modify for Reuse**:
-   - Extract reusable components like the sidebar (`Sidebar.tsx`) and top navigation.
-   - Wrap the dashboard in `ProtectedRoute` to secure it with authentication.
-
-4. **Theme Customization**:
-   - Add a custom theme in `src/theme/theme.ts` for consistent styling across the app:
-     ```tsx
-     import { createTheme } from '@mui/material/styles';
-
-     const theme = createTheme({
-       palette: {
-         primary: {
-           main: '#1976d2',
-         },
-         secondary: {
-           main: '#dc004e',
-         },
-       },
-       typography: {
-         fontFamily: 'Roboto, Arial, sans-serif',
-       },
-     });
-
-     export default theme;
+#### **Step 1: Project Setup** ✅
+1. **Base Project Structure**: ✅
+   - Established the following directory structure:
+     ```
+     frontend/
+     ├── Dockerfile
+     ├── .dockerignore
+     ├── .gitignore
+     ├── package.json
+     ├── tsconfig.json
+     ├── public/
+     │   ├── index.html
+     │   └── manifest.json
+     └── src/
+         ├── App.tsx
+         ├── index.tsx
+         ├── components/
+         │   ├── Dashboard.tsx
+         │   ├── AppNavbar.tsx
+         │   ├── SideMenu.tsx
+         │   ├── Header.tsx
+         │   └── MainGrid.tsx
+         ├── services/
+         │   └── authService.ts
+         ├── theme/
+         │   └── theme.ts
+         └── utils/
+             └── helpers.ts
      ```
 
-5. **Integration in `App.tsx`**:
-   - Wrap the app with the `ThemeProvider` and `CssBaseline` for global styles:
-     ```tsx
-     import React from 'react';
-     import { ThemeProvider, CssBaseline } from '@mui/material';
-     import { BrowserRouter, Routes, Route } from 'react-router-dom';
-     import theme from './theme/theme';
-     import Dashboard from './components/Dashboard';
-     import Login from './components/Login';
-     import ProtectedRoute from './components/ProtectedRoute';
-
-     const App = () => (
-       <ThemeProvider theme={theme}>
-         <CssBaseline />
-         <BrowserRouter>
-           <Routes>
-             <Route path="/login" element={<Login />} />
-             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-           </Routes>
-         </BrowserRouter>
-       </ThemeProvider>
-     );
-
-     export default App;
+2. **Install Dependencies**: ✅
+   - Material UI and dependencies installed through Docker:
+     ```bash
+     # Run npm commands through Docker:
+     docker-compose exec frontend npm install @mui/material @mui/icons-material @emotion/react @emotion/styled @fontsource/roboto
+     docker-compose exec frontend npm install @mui/x-date-pickers @mui/x-charts @mui/x-data-grid @mui/x-tree-view
+     docker-compose exec frontend npm install react-router-dom axios jwt-decode
+     docker-compose exec frontend npm install --save-dev typescript @types/react @types/react-dom @types/react-router-dom
      ```
 
----
-
-## **3. Docker Setup for React**
-
-### Dockerfile
-```dockerfile
-# Stage 1: Build
-FROM node:18-alpine as build
-WORKDIR /app
-
-# Install dependencies
-COPY package.json package-lock.json ./
-RUN npm install
-
-# Copy source code and build
-COPY . .
-RUN npm run build
-
-# Stage 2: Serve with nginx
-FROM nginx:alpine
-COPY --from=build /app/build /usr/share/nginx/html
-
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
-```
+3. **Dockerize the Frontend**: ✅
+   - Set up multi-stage Dockerfile for production
+   - Added frontend service to docker-compose.yml
+   - Development environment configured with hot-reloading
 
 ---
 
-### `.dockerignore`
-Ensure unnecessary files are excluded from the Docker build context:
-```
-node_modules
-build
-.dockerignore
-.git
-.gitignore
-```
+#### **Step 2: Material UI Dashboard Implementation** ✅
+
+1. **Integrate Dashboard Template**: ✅
+   - Implemented `Dashboard.tsx` with responsive layout
+   - Set up basic grid structure for content
+
+2. **Create Supporting Components**: ✅
+   - Implemented required components:
+     - `listItems.tsx`: Navigation menu items
+     - Drawer and AppBar components integrated into Dashboard
+
+3. **Customize the Theme**: ✅
+   - Defined custom Material UI theme in `src/theme/theme.ts`
+   - Implemented primary and secondary color palettes
+   - Set up typography and component customizations
+
+4. **Component Customizations**: ✅
+   - Basic component customizations implemented in theme
+   - Drawer width and behavior configured
+   - AppBar styling and responsiveness implemented
 
 ---
 
-### Add Frontend to `docker-compose.yml`
-Update `docker-compose.yml` to include the frontend:
-```yaml
-frontend:
-  build:
-    context: ./frontend
-    dockerfile: Dockerfile
-  container_name: react-frontend
-  ports:
-    - "3000:3000"
-  volumes:
-    - ./frontend:/app
-    - /app/node_modules
-```
+#### **Step 3: Authentication Flow** 🔄 (In Progress)
+
+1. **Login Screen**:
+   - Create a login form using Material UI
+   - Implement JWT authentication with Django backend
+
+2. **Token Storage and Validation**:
+   - Implement token storage in localStorage
+   - Create protected route components
+
+3. **Token Refresh**:
+   - Implement automatic token refresh mechanism
+   - Handle expired token scenarios
+
+4. **Logout**:
+   - Implement secure logout functionality
+   - Clear token storage and state
 
 ---
 
-## **4. Git Ignore**
+#### **Next Steps**:
 
-### `.gitignore`
-Add a `.gitignore` file to exclude unnecessary files from version control:
-```
-# Node.js
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+1. **Implement Authentication Flow**:
+   - Create login page component
+   - Set up authentication service
+   - Implement protected routes
 
-# TypeScript
-*.tsbuildinfo
+2. **Add Dashboard Content**:
+   - Implement chart components
+   - Create data tables for orders/activity
+   - Add real data fetching from backend
 
-# Logs
-logs
-*.log
-npm-debug.log*
-
-# Build
-build/
-
-# Docker
-docker-compose.override.yml
-.dockerignore
-
-# IDEs
-.vscode/
-.idea/
-*.swp
-```
+3. **Testing and Optimization**:
+   - Add component tests
+   - Optimize bundle size
+   - Implement error boundaries
 
 ---
 
-## **5. Authentication Flow**
+**Note**: All npm commands should be run through Docker using:
+```bash
+docker-compose exec frontend npm <command>
+```
 
-### Steps:
-1. **Login Page (`Login.tsx`)**:
-   - Use Material UI components to create a login form.
-   - Send a POST request to the Django backend `/api/token/` endpoint.
-   - Store the `access` and `refresh` tokens in `localStorage`.
-
-   Example:
-   ```tsx
-   import React, { useState } from 'react';
-   import { TextField, Button, Container, Typography } from '@mui/material';
-   import { useNavigate } from 'react-router-dom';
-   import axios from 'axios';
-
-   const Login = () => {
-     const [username, setUsername] = useState('');
-     const [password, setPassword] = useState('');
-     const navigate = useNavigate();
-
-     const handleSubmit = async (e: React.FormEvent) => {
-       e.preventDefault();
-       try {
-         const response = await axios.post('http://localhost:8000/api/token/', { username, password });
-         localStorage.setItem('authToken', response.data.access);
-         localStorage.setItem('refreshToken', response.data.refresh);
-         navigate('/dashboard');
-       } catch (error) {
-         alert('Invalid credentials');
-       }
-     };
-
-     return (
-       <Container maxWidth="sm">
-         <Typography variant="h4" align="center" gutterBottom>Login</Typography>
-         <form onSubmit={handleSubmit}>
-           <TextField
-             label="Username"
-             fullWidth
-             margin="normal"
-             value={username}
-             onChange={(e) => setUsername(e.target.value)}
-           />
-           <TextField
-             label="Password"
-             type="password"
-             fullWidth
-             margin="normal"
-             value={password}
-             onChange={(e) => setPassword(e.target.value)}
-           />
-           <Button variant="contained" color="primary" fullWidth type="submit">Login</Button>
-         </form>
-       </Container>
-     );
-   };
-
-   export default Login;
-   ```
-
-2. **Protected Routes (`ProtectedRoute.tsx`)**:
-   - Ensure only authenticated users can access the dashboard:
-     ```tsx
-     import React from 'react';
-     import { Navigate } from 'react-router-dom';
-
-     const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
-       const token = localStorage.getItem('authToken');
-       return token ? children : <Navigate to="/login" />;
-     };
-
-     export default ProtectedRoute;
-     ```
-
-3. **Logout Functionality**:
-   - Add a logout button in the dashboard to clear tokens and redirect to the login page.
+This ensures consistency across development environments and maintains the containerized workflow.
 
 ---
 
-## **6. Testing**
+### **Final Deliverables**
+1. A fully functional admin dashboard using the Material UI `Dashboard.tsx` template.
+2. JWT-based authentication flow integrated with the Django backend.
+3. Customizable and responsive Material UI theme applied globally.
+4. Dockerized React application ready for development and production environments.
 
-1. Verify the login page works with valid/invalid credentials.
-2. Test `ProtectedRoute` by accessing `/dashboard` without a token (should redirect to `/login`).
-3. Check the Material UI dashboard layout for compatibility across screen sizes.
+---
+
+Let me know if you'd like more details or examples for any part of this roadmap!
+

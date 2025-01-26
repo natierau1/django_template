@@ -66,8 +66,11 @@ services:
       - REACT_APP_API_URL=http://localhost:8000
       - PORT=3000
       - HOST=0.0.0.0
+      - WDS_SOCKET_PORT=3000
+      - WATCHPACK_POLLING=true
     ports:
       - "3000:3000"
+      - "35729:35729"
     depends_on:
       - backend
     networks:

@@ -11,5 +11,12 @@ RUN npm install
 # Copy project files
 COPY . .
 
+# Expose ports for the development server and WebSocket
+EXPOSE 3000 35729
+
+# Start development server with polling
+ENV CHOKIDAR_USEPOLLING=true
+ENV WATCHPACK_POLLING=true
+
 # Start development server
 CMD ["npm", "start"] 
