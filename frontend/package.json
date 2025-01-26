@@ -11,7 +11,12 @@
     "@mui/material": "^5.15.5",
     "@mui/icons-material": "^5.15.5",
     "@emotion/react": "^11.11.3",
-    "@emotion/styled": "^11.11.0"
+    "@emotion/styled": "^11.11.0",
+    "@mui/x-data-grid": "^6.19.1",
+    "recharts": "^2.10.4"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
   },
   "scripts": {
     "start": "react-scripts start",
