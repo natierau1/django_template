@@ -1,0 +1,1 @@
+# Empty by default for Django project 
