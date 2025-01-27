@@ -23,4 +23,6 @@ ENV WATCHPACK_POLLING=true
 ENV TSC_WATCHFILE=UseFsEventsWithFallbackDynamicPolling
 
 # Start development server
+ENV NODE_ENV=development
+ENV NODE_OPTIONS=--openssl-legacy-provider
 CMD ["npm", "start"] 

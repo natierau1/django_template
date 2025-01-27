@@ -63,7 +63,7 @@ export default function MainGrid() {
       </Typography>
       <Grid container spacing={2}>
         {data.map((card, index) => (
-          <Grid item xs={12} sm={6} lg={3}>
+          <Grid item xs={12} sm={6} lg={3} key={index}>
             <StatCard {...card} />
           </Grid>
         ))}
