@@ -10,10 +10,21 @@ import { useTheme } from '@mui/material/styles';
 export default function PageViewsBarChart() {
   const theme = useTheme();
   const colorPalette = [
-    (theme.vars || theme).palette.primary.dark,
-    (theme.vars || theme).palette.primary.main,
-    (theme.vars || theme).palette.primary.light,
+    theme.palette.primary.dark,
+    theme.palette.primary.main,
+    theme.palette.primary.light,
   ];
+
+  const dataset = [
+    { month: 'Jan', pageViews: 2234, downloads: 3098, conversions: 4051 },
+    { month: 'Feb', pageViews: 3872, downloads: 4215, conversions: 2275 },
+    { month: 'Mar', pageViews: 2998, downloads: 2384, conversions: 3129 },
+    { month: 'Apr', pageViews: 4125, downloads: 2101, conversions: 4693 },
+    { month: 'May', pageViews: 3357, downloads: 4752, conversions: 3904 },
+    { month: 'Jun', pageViews: 2789, downloads: 3593, conversions: 2038 },
+    { month: 'Jul', pageViews: 2998, downloads: 2384, conversions: 2275 },
+  ];
+
   return (
     <Card variant="outlined" sx={{ width: '100%' }}>
       <CardContent>
@@ -39,44 +50,17 @@ export default function PageViewsBarChart() {
           </Typography>
         </Stack>
         <BarChart
-          borderRadius={8}
-          colors={colorPalette}
-          xAxis={
-            [
-              {
-                scaleType: 'band',
-                categoryGapRatio: 0.5,
-                data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
-              },
-            ] as any
-          }
+          dataset={dataset}
+          xAxis={[{ scaleType: 'band', dataKey: 'month' }]} // x-axis configured for months
           series={[
-            {
-              id: 'page-views',
-              label: 'Page views',
-              data: [2234, 3872, 2998, 4125, 3357, 2789, 2998],
-              stack: 'A',
-            },
-            {
-              id: 'downloads',
-              label: 'Downloads',
-              data: [3098, 4215, 2384, 2101, 4752, 3593, 2384],
-              stack: 'A',
-            },
-            {
-              id: 'conversions',
-              label: 'Conversions',
-              data: [4051, 2275, 3129, 4693, 3904, 2038, 2275],
-              stack: 'A',
-            },
+            { dataKey: 'pageViews', label: 'Page views', stack: 'A' },
+            { dataKey: 'downloads', label: 'Downloads', stack: 'A' },
+            { dataKey: 'conversions', label: 'Conversions', stack: 'A' },
           ]}
-          height={250}
-          margin={{ left: 50, right: 0, top: 20, bottom: 20 }}
-          grid={{ horizontal: true }}
+          width={600}
+          height={350}
           slotProps={{
-            legend: {
-              hidden: true,
-            },
+            legend: { hidden: false }, // Show legend
           }}
         />
       </CardContent>
