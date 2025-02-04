@@ -1,28 +1,24 @@
-# Use Node image for building
+# Use Node 18 as specified in requirements
 FROM node:18-alpine
+
+# Install pnpm
+RUN npm install -g pnpm@8
 
 # Set work directory
 WORKDIR /app
 
-# Install dependencies first (for better caching)
-COPY package*.json ./
-COPY tsconfig.json ./
+# Copy package files first
+COPY package.json ./
 
 # Install dependencies
-RUN npm install
+RUN pnpm install
 
-# Copy project files
-COPY . .
+# Set development environment
+ENV NODE_ENV=development
+ENV NEXT_TELEMETRY_DISABLED=1
 
-# Expose ports for the development server and WebSocket
-EXPOSE 3000 35729
-
-# Start development server with polling
-ENV CHOKIDAR_USEPOLLING=true
-ENV WATCHPACK_POLLING=true
-ENV TSC_WATCHFILE=UseFsEventsWithFallbackDynamicPolling
+# Expose port for Next.js
+EXPOSE 3000
 
 # Start development server
-ENV NODE_ENV=development
-ENV NODE_OPTIONS=--openssl-legacy-provider
-CMD ["npm", "start"] 
+CMD ["pnpm", "dev"] 

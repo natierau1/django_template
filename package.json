@@ -10,7 +10,9 @@
     "@mui/x-data-grid": "^7.24.1",
     "@mui/x-date-pickers": "^7.24.1",
     "@mui/x-tree-view": "^7.24.1",
-    "dayjs": "^1.11.13"
+    "@types/react-router-dom": "^5.3.3",
+    "dayjs": "^1.11.13",
+    "react-router-dom": "^7.1.5"
   },
   "devDependencies": {
     "@types/react": "^18.3.18",

@@ -21,15 +21,17 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: react-frontend-prod
+    container_name: nextjs-frontend-prod
     ports:
-      - "80:80"
+      - "3000:3000"
     depends_on:
       - backend
     networks:
       - frontend_network
     environment:
-      - REACT_APP_API_URL=http://localhost:8000
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+      - NODE_ENV=production
+      - NEXT_TELEMETRY_DISABLED=1
 
   db:
     image: postgres:15-alpine

@@ -1,30 +1,51 @@
 # Build stage
-FROM node:18-alpine as build
+FROM node:18-alpine AS builder
+
+# Install pnpm
+RUN npm install -g pnpm@8
 
 # Set work directory
 WORKDIR /app
 
-# Install dependencies
+# Copy package files
 COPY package*.json ./
-RUN npm ci
+COPY pnpm-lock.yaml ./
+
+# Install dependencies
+RUN pnpm install
 
 # Copy project files
 COPY . .
 
-# Build the application
-RUN npm run build
+# Build application
+ENV NEXT_TELEMETRY_DISABLED=1
+RUN pnpm build
 
 # Production stage
-FROM nginx:alpine
+FROM node:18-alpine AS runner
 
-# Copy built assets from build stage
-COPY --from=build /app/build /usr/share/nginx/html
+# Install pnpm
+RUN npm install -g pnpm@8
 
-# Add nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+WORKDIR /app
 
-# Expose port 80
-EXPOSE 80
+# Set environment to production
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
 
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"] 
+# Copy necessary files from builder
+COPY --from=builder /app/next.config.js ./
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/package.json ./
+COPY --from=builder /app/pnpm-lock.yaml ./
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+
+# Install production dependencies only
+RUN pnpm install --prod
+
+# Expose the listening port
+EXPOSE 3000
+
+# Run the app
+CMD ["node", "server.js"] 
